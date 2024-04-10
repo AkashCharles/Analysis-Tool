@@ -4,15 +4,24 @@ import '../styles/Login.css'
 
 function Login() {
   const {
+    isLoading,
     isConnected,
+    error,
     user,
     connectWithPopup,
     logout,
   } = useEarthoOne();
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
   if (isConnected) {
     return (
-      <div id="body">
+      <div>
         Hello {user.displayName}{' '}
         <button onClick={() => logout({ returnTo: window.location.origin })}>
           Log out
@@ -20,12 +29,15 @@ function Login() {
       </div>
     );
   } else {
-    return(
-      <div id="body">
-         <button onClick={connectWithPopup}>Log in</button>
-      </div>
-    )
+    return <button
+          className="btn btn-outline-success"
+          id="login"
+          onClick={() => connectWithPopup({ accessId: "rIOaoDFI8TRxHFwRPXrm" })}
+        >
+        Log in
+      </button>;
   }
 }
 
 export default Login;
+

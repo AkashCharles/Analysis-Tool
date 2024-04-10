@@ -1,0 +1,80 @@
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    height: 8vh;
+    align-items: center;
+    background-color: rgba(129, 129, 129, 0.158);
+    opacity: 0.8;
+    border-radius: 9999px;
+    margin-top: 10px;
+    margin-left: 400px; 
+    margin-right: 400px; 
+  }
+  
+
+  .navbarcontents {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .texts {
+    color: white;
+    font-size: 16px; 
+  }
+
+  .login {
+    margin-top: 13px;
+  }
+
+  .image {
+    background-image: url('../images/background1.jpg');
+    background-size: cover; 
+    background-position: center; 
+    width: 100vw; 
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1; 
+  }
+  
+  .hero {
+    padding: 20px;
+    margin-left: 50px;
+    margin-top: 150px;
+  }
+  
+  .hero-content {
+    width: 50%; 
+  }
+  
+  .heading-text {
+    font-size: 50px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .secondary-text {
+    margin-top: 50px;
+    font-size: 25px;
+    color: #ffffff;
+  }
+
+  .button-spacing {
+    margin-top: 10px;
+    display: flex;
+    padding: 10px;
+    margin-top: 80px;
+    margin-left: 150px;
+  }
+
+  .button-spacing button {
+    margin-right: 50px;
+    font-size: 20px; 
+    padding: 20px 80px;
+  }
+  
+  
