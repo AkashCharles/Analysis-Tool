@@ -1,46 +1,39 @@
-import '../styles/Login.css';
-import profile from "../images/a.png";
-import email from "../images/email.jpg";
-import pass from "../images/pass.png";
+import React from 'react';
+import { useEarthoOne } from '@eartho/one-client-react';
+import '../styles/Login.css'
+
 function Login() {
-  return (
-    <div className="main">
-     <div className="sub-main">
-       <div>
-         <div className="imgs">
-           <div className="container-image">
-             <img src={profile} alt="profile" className="profile"/>
+  const {
+    isLoading,
+    isConnected,
+    error,
+    user,
+    connectWithPopup,
+    logout,
+  } = useEarthoOne();
 
-           </div>
-
-
-         </div>
-         <div>
-           <h1>Login Page</h1>
-           <div>
-             <img src={email} alt="email" className="email"/>
-             <input type="text" placeholder="user name" className="name"/>
-           </div>
-           <div className="second-input">
-             <img src={pass} alt="pass" className="email"/>
-             <input type="password" placeholder="Password" className="name"/>
-           </div>
-          <div className="login-button">
-          <button>Login</button>
-          </div>
-           
-            <p className="link">
-              <a href="#">Forgot password ?</a> Or<a href="#">Sign Up</a>
-            </p>
-           
- 
-         </div>
-       </div>
-       
-
-     </div>
-    </div>
-  );
+  if (isLoading) {
+    return <div>Loading…</div>;
+  }
+  if (error) {
+    return <div>Oops… {error.message}</div>;
+  }
+  if (isConnected) {
+    return (
+      <div >
+        Hello {user.displayName}{' '}
+        <button onClick={() => logout({ returnTo: window.location.origin })}>
+          Log out
+        </button>
+      </div>
+    );
+  } else {
+    return(
+      <div id="body">
+         <button onClick={connectWithPopup}>Log in</button>
+      </div>
+    )
+  }
 }
 
 export default Login;

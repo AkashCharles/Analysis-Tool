@@ -16,10 +16,14 @@ function Login() {
 
          </div>
          <div>
-           <h1>Login Page</h1>
+           <h1>Sign up Page</h1>
+           <div>
+             <img src={email} alt="username" className="email"/>
+             <input type="text" placeholder="user name" className="name"/>
+           </div>
            <div>
              <img src={email} alt="email" className="email"/>
-             <input type="text" placeholder="user name" className="name"/>
+             <input type="text" placeholder="email" className="name"/>
            </div>
            <div className="second-input">
              <img src={pass} alt="pass" className="email"/>
