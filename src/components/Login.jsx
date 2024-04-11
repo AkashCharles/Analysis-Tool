@@ -12,6 +12,8 @@ function Login() {
     logout,
   } = useEarthoOne();
 
+  console.log(isConnected)
+
   if (isLoading) {
     return <div>Loading...</div>;
   }

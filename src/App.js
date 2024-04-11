@@ -6,7 +6,7 @@ import Testing123 from './components/Testing123';
 function App() {
   return (
     <div>
-      <Testing123></Testing123>
+      <Home/>
     </div>
   );
 }

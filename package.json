@@ -5,7 +5,7 @@
   "dependencies": {
     "@clerk/clerk-react": "^4.30.10",
     "@eartho/one-client-js": "^2.0.6",
-    "@eartho/one-client-react": "^2.0.2",
+    "@eartho/one-client-react": "^2.0.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
