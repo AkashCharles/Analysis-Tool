@@ -4,15 +4,24 @@ import Login from './Login';
 
 const Navbar = () => {
   return (
-    <div className='Navbar'>
-        <div className='navbarcontents'>
-            <div>
-                <p className="texts">image</p>
+    <div className='Navbar fixed w-full z-20'>
+        <div className='navbarcontents text-white'>
+            <div className='flex justify-between gap-5'>
+                <p>image</p>
+                <p>Nelsonin</p>
             </div>
-            <div>
-                <p className="texts">Header</p>
+            <div className=' flex justify-between w-[30%] '>
+                <div>
+                    <a href="">Home</a>
+                </div>
+                <div>
+                    <a href="">Start</a>
+                </div>
+                <div>
+                    <a href="">About</a>
+                </div>
             </div>
-            <div className='login'>
+            <div className=''>
                 <Login></Login>
             </div>
         </div>

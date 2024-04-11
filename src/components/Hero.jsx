@@ -1,5 +1,6 @@
 import React from 'react';
 import "../styles/Navbar.css"
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const Hero = () => {
   return (
@@ -11,8 +12,12 @@ const Hero = () => {
         <p className='secondary-text'>Evaluate your business's performance and position in the market for sustainable growth.</p>
       </div>
       <div className='button-spacing'>
-        <button>Start</button>
-        <button>About</button>
+        <div>
+          <button className='start-button'>Start Free</button>
+        </div>
+        <div className='learn-more'>
+          <p class="learn-more">Learn More </p> <FaArrowRightLong class="arrow" size={20}/>
+        </div>
       </div>
     </div>
   );
