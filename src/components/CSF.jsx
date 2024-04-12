@@ -224,7 +224,7 @@ const CSF = () => {
             </tbody>
           </table>
           <div className="mt-4 flex justify-center">
-            <Link to="/result-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+            <Link to="/bcg-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
               Go to csf Page
             </Link>
           </div>

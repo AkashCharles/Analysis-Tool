@@ -5,7 +5,6 @@ import Strength from './components/Strength';
 import OppandThreat from './components/OppandThreat';
 import CSF from './components/CSF';
 import Result from './components/Result';
-import About from './components/About';
 import Docs from './components/Docs';
 
 const App = () => {
@@ -17,7 +16,6 @@ const App = () => {
         <Route path="/strength-page" element={<Strength />} /> 
         <Route path="/other-page" element={<OppandThreat />} />
         <Route path="/csf-page" element={<CSF />} />
-        <Route path="/result-page" element={<Result />} />
       </Routes>
     </Router>
   );
