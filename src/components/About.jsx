@@ -18,8 +18,12 @@ const About = () => {
   // Add other click handlers and text variables as needed for other steps
 
   return (
-    <div className="flex h-screen pt-[8vh]">
-      <div className="bg-gray-300 w-[20%] h-screen fixed left-0 z-10 overflow-hidden">
+    <div>
+      <div className='w-full flex h-[70px]'></div>
+      
+    <div className="flex  h-screen w-full">
+
+      <div className="bg-gray-300 w-[20%] h-screen fixed  overflow-hidden">
         <div className="flex flex-col items-start justify-start h-full p-4">
           <span className="text-xl font-bold mb-4">About</span>
           <div className="box-container">
@@ -49,9 +53,11 @@ const About = () => {
         </div>
       </div>
 
-      <div className="w-[80%] h-screen bg-gray-200 ml-[20%] z-0">
+      <div className="w-[80%] h-screen bg-gray-200 ">
         <div className="p-4">{displayText}</div>
       </div>
+
+    </div>
     </div>
   );
 };
