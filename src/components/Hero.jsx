@@ -1,8 +1,20 @@
 import React from 'react';
 import "../styles/Navbar.css"
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+
+  const navigate = useNavigate(); 
+
+  const handleStartButtonClick = () => {
+    navigate('/strength-page');
+  };
+
+  const handleLearnButtonClick = () => {
+    navigate('/Learn-page');
+  };
+
   return (
     <div className="hero">
       <div className="hero-content">
@@ -13,10 +25,10 @@ const Hero = () => {
       </div>
       <div className='button-spacing'>
         <div>
-          <button className='start-button'>Start Free</button>
+          <button onClick={handleStartButtonClick} className='start-button'>Start Free</button>
         </div>
         <div className='learn-more'>
-          <p class="learn-more">Learn More </p> <FaArrowRightLong class="arrow" size={20}/>
+          <p onClick={handleLearnButtonClick} class="learn-more">Learn More </p> <FaArrowRightLong class="arrow" size={20}/>
         </div>
       </div>
     </div>

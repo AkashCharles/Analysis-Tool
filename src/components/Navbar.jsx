@@ -4,7 +4,7 @@ import Login from './Login';
 
 const Navbar = () => {
   return (
-    <div className='Navbar fixed w-screen '>
+    <div className='Navbar flex mx-52 my-4 '>
         <div className='navbarcontents text-white'>
             <div className='flex justify-between gap-5'>
                 <p>image</p>

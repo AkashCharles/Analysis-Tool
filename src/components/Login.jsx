@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useEarthoOne } from '@eartho/one-client-react';
-import '../styles/Login.css'
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import '../styles/Login.css';
 
 function Login() {
   const {
@@ -12,7 +13,28 @@ function Login() {
     logout,
   } = useEarthoOne();
 
-  console.log(isConnected)
+  const db = getFirestore();
+
+  useEffect(() => {
+    const saveDisplayName = async () => {
+      if (isConnected && user && user.displayName) {
+        try {
+          // Check if user.userId is defined, use a default value if it's not available
+          const userId = user.userId || 'unknown_user';
+          const docRef = await addDoc(collection(db, 'users'), {
+            displayName: user.displayName,
+            userId: userId,
+            // Add other user data you want to store here
+          });
+          console.log('Display name saved with ID: ', docRef.id);
+        } catch (error) {
+          console.error('Error adding document: ', error);
+        }
+      }
+    };
+  
+    saveDisplayName();
+  }, [db, isConnected, user]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -21,7 +43,7 @@ function Login() {
     return <div>Oops... {error.message}</div>;
   }
 
-  if (isConnected) {
+  if (isConnected && user && user.displayName) { 
     return (
       <div>
         Hello {user.displayName}{' '}
@@ -31,15 +53,16 @@ function Login() {
       </div>
     );
   } else {
-    return <button
-          className="btn btn-outline-success"
-          id="login"
-          onClick={() => connectWithPopup({ accessId: "rIOaoDFI8TRxHFwRPXrm" })}
-        >
+    return (
+      <button
+        className="btn btn-outline-success"
+        id="login"
+        onClick={() => connectWithPopup({ accessId: "rIOaoDFI8TRxHFwRPXrm" })}
+      >
         Log in
-      </button>;
+      </button>
+    );
   }
 }
 
 export default Login;
-

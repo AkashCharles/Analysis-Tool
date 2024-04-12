@@ -1,20 +1,26 @@
 import React from 'react';
-import './styles/Navbar.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import Testing123 from './components/Testing123';
-import About from './components/About';
-import Navbar from './components/Navbar';
-import Login from './components/Login';
-import Docs from './components/Docs';
 import Strength from './components/Strength';
+import OppandThreat from './components/OppandThreat';
+import CSF from './components/CSF';
+import Result from './components/Result';
+import About from './components/About';
+import Docs from './components/Docs';
 
-function App() {
+const App = () => {
   return (
-  <>
-    <Strength></Strength>
-  </>
-
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} /> 
+        <Route path="/learn-page" element={<Docs />} /> 
+        <Route path="/strength-page" element={<Strength />} /> 
+        <Route path="/other-page" element={<OppandThreat />} />
+        <Route path="/csf-page" element={<CSF />} />
+        <Route path="/result-page" element={<Result />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

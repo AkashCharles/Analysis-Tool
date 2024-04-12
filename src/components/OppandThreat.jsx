@@ -3,162 +3,153 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import { Link } from 'react-router-dom';
 
-const Strength = () => {
-  const [numStrengths, setNumStrengths] = useState('');
-  const [strengthsData, setStrengthsData] = useState([]);
+const OppandThreat = () => {
+  const [numOpportunities, setNumOpportunities] = useState('');
+  const [opportunitiesData, setOpportunitiesData] = useState([]);
   const [displayParams, setDisplayParams] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [showTable, setShowTable] = useState(false);
-  const [numWeaknesses, setNumWeaknesses] = useState('');
-  const [weaknessesData, setWeaknessesData] = useState([]);
-  const [displayWeaknessParams, setDisplayWeaknessParams] = useState(false);
-  const [weaknessTableData, setWeaknessTableData] = useState([]);
-  const [showWeaknessTable, setShowWeaknessTable] = useState(false);
+  const [numThreats, setNumThreats] = useState('');
+  const [threatsData, setThreatsData] = useState([]);
+  const [displayThreatParams, setDisplayThreatParams] = useState(false);
+  const [threatTableData, setThreatTableData] = useState([]);
+  const [showThreatTable, setShowThreatTable] = useState(false);
   const db = getFirestore();
   const {
     user,
   } = useEarthoOne();
 
   const handleDisplayParams = () => {
-    const num = parseInt(numStrengths);
+    const num = parseInt(numOpportunities);
     if (!isNaN(num)) {
       let newData = [];
       for (let i = 1; i <= num; i++) {
         newData.push({
-          strength: '',
+          opportunity: '',
           weight: '',
           rating: ''
         });
       }
-      setStrengthsData(newData);
+      setOpportunitiesData(newData);
       setDisplayParams(true);
     } else {
-      alert('Please enter a valid number for Number of Strengths.');
+      alert('Please enter a valid number for Number of Opportunities.');
     }
   };
 
-  const handleWeaknessDisplayParams = () => {
-    const num = parseInt(numWeaknesses);
+  const handleThreatDisplayParams = () => {
+    const num = parseInt(numThreats);
     if (!isNaN(num)) {
       let newData = [];
       for (let i = 1; i <= num; i++) {
         newData.push({
-          weakness: '',
+          threat: '',
           weight: '',
           rating: ''
         });
       }
-      setWeaknessesData(newData);
-      setDisplayWeaknessParams(true);
+      setThreatsData(newData);
+      setDisplayThreatParams(true);
     } else {
-      alert('Please enter a valid number for Number of Weaknesses.');
+      alert('Please enter a valid number for Number of Threats.');
     }
   };
 
-  const calculateScore = () => {
-    const calculatedData = strengthsData.map(strength => ({
-      ...strength,
-      score: parseFloat(strength.weight) * parseInt(strength.rating)
+  const calculateScore = (isOpportunity) => {
+    const data = isOpportunity ? opportunitiesData : threatsData;
+    const calculatedData = data.map(item => ({
+      ...item,
+      score: parseFloat(item.weight) * parseInt(item.rating)
     }));
-    const totalStrengthScore = calculatedData.reduce((total, item) => total + item.score, 0);
-    setTableData(calculatedData);
-    return totalStrengthScore;
-  };
-
-  const calculateWeaknessScore = () => {
-    const calculatedData = weaknessesData.map(weakness => ({
-      ...weakness,
-      score: parseFloat(weakness.weight) * parseInt(weakness.rating)
-    }));
-    const totalWeaknessScore = calculatedData.reduce((total, item) => total + item.score, 0);
-    setWeaknessTableData(calculatedData);
-    return totalWeaknessScore;
+    const totalScore = calculatedData.reduce((total, item) => total + item.score, 0);
+    isOpportunity ? setTableData(calculatedData) : setThreatTableData(calculatedData);
+    return totalScore;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const strengthBatch = [];
-      const weaknessBatch = [];
+      const opportunityBatch = [];
+      const threatBatch = [];
       
-      strengthsData.forEach(strength => {
-        strengthBatch.push(addDoc(collection(db, "strengths"), {
-          displayName: user.displayName, // Add display name to the document
-          strength: strength.strength,
-          weight: strength.weight,
-          rating: strength.rating
+      opportunitiesData.forEach(opportunity => {
+        opportunityBatch.push(addDoc(collection(db, "opportunities"), {
+          displayName: user.displayName,
+          opportunity: opportunity.opportunity,
+          weight: opportunity.weight,
+          rating: opportunity.rating
         }));
       });
       
-      weaknessesData.forEach(weakness => {
-        weaknessBatch.push(addDoc(collection(db, "weaknesses"), {
-          displayName: user.displayName, // Add display name to the document
-          weakness: weakness.weakness,
-          weight: weakness.weight,
-          rating: weakness.rating
+      threatsData.forEach(threat => {
+        threatBatch.push(addDoc(collection(db, "threats"), {
+          displayName: user.displayName,
+          threat: threat.threat,
+          weight: threat.weight,
+          rating: threat.rating
         }));
       });
       
-      await Promise.all(strengthBatch);
-      await Promise.all(weaknessBatch);
+      await Promise.all(opportunityBatch);
+      await Promise.all(threatBatch);
       
       alert("Data saved to Firestore");
       
-      const totalStrengthScore = calculateScore();
-      const totalWeaknessScore = calculateWeaknessScore();
+      const totalOpportunityScore = calculateScore(true);
+      const totalThreatScore = calculateScore(false);
       
-      const totalSum = totalStrengthScore + totalWeaknessScore;
+      const totalSum = totalOpportunityScore + totalThreatScore;
       
       setShowTable(true);
-      setShowWeaknessTable(true);
+      setShowThreatTable(true);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
   };
 
-  const handleChange = (index, field, value, isStrength) => {
-    const newData = isStrength ? [...strengthsData] : [...weaknessesData];
+  const handleChange = (index, field, value, isOpportunity) => {
+    const newData = isOpportunity ? [...opportunitiesData] : [...threatsData];
     newData[index][field] = value;
-    isStrength ? setStrengthsData(newData) : setWeaknessesData(newData);
+    isOpportunity ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-      <h1 className="text-3xl font-bold text-center mb-8">Strengths and Weaknesses Analysis</h1>
+      <h1 className="text-3xl font-bold text-center mb-8">Opportunities and Threats Analysis</h1>
       <div className="flex flex-wrap justify-center">
         <form className="max-w-[30vw] mx-4 bg-white p-8 border border-gray-300 rounded-lg">
           <div className='flex gap-3'>
-            <div  className='flex flex-col items-center'>
-              <h2 className="text-xl font-bold mb-4">Strengths</h2>
-              <label htmlFor="numStrengths" className="block mb-2">Number of Strengths:</label>
+            <div className='flex flex-col items-center'>
+              <h2 className="text-xl font-bold mb-4">Opportunities</h2>
+              <label htmlFor="numOpportunities" className="block mb-2">Number of Opportunities:</label>
               <input
                 type="number"
-                id="numStrengths"
-                name="numStrengths"
-                value={numStrengths}
-                onChange={(e) => setNumStrengths(e.target.value)}
-                placeholder="Enter number of strengths"
+                id="numOpportunities"
+                name="numOpportunities"
+                value={numOpportunities}
+                onChange={(e) => setNumOpportunities(e.target.value)}
+                placeholder="Enter number of opportunities"
                 className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
               />
 
-              {displayParams && strengthsData.map((strength, index) => (
+              {displayParams && opportunitiesData.map((opportunity, index) => (
                 <div key={index}>
-                  <label htmlFor={`strength${index + 1}`} className="block mb-2">Strength {index + 1}:</label>
+                  <label htmlFor={`opportunity${index + 1}`} className="block mb-2">Opportunity {index + 1}:</label>
                   <input
                     type="text"
-                    id={`strength${index + 1}`}
-                    name={`strength${index + 1}`}
-                    value={strength.strength}
-                    onChange={(e) => handleChange(index, 'strength', e.target.value, true)}
-                    placeholder={`Enter strength ${index + 1}`}
+                    id={`opportunity${index + 1}`}
+                    name={`opportunity${index + 1}`}
+                    value={opportunity.opportunity}
+                    onChange={(e) => handleChange(index, 'opportunity', e.target.value, true)}
+                    placeholder={`Enter opportunity ${index + 1}`}
                     className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
                   />
-                  <label htmlFor={`strengthWeight${index + 1}`} className="block mb-2">Weight:</label>
+                  <label htmlFor={`opportunityWeight${index + 1}`} className="block mb-2">Weight:</label>
                   <input
                     type="number"
-                    id={`strengthWeight${index + 1}`}
-                    name={`strengthWeight${index + 1}`}
-                    value={strength.weight}
+                    id={`opportunityWeight${index + 1}`}
+                    name={`opportunityWeight${index + 1}`}
+                    value={opportunity.weight}
                     onChange={(e) => handleChange(index, 'weight', e.target.value, true)}
                     step="0.01"
                     min="0"
@@ -166,12 +157,12 @@ const Strength = () => {
                     placeholder="Enter weight (0-1)"
                     className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
                   />
-                  <label htmlFor={`strengthRating${index + 1}`} className="block mb-2">Rating:</label>
+                  <label htmlFor={`opportunityRating${index + 1}`} className="block mb-2">Rating:</label>
                   <input
                     type="number"
-                    id={`strengthRating${index + 1}`}
-                    name={`strengthRating${index + 1}`}
-                    value={strength.rating}
+                    id={`opportunityRating${index + 1}`}
+                    name={`opportunityRating${index + 1}`}
+                    value={opportunity.rating}
                     onChange={(e) => handleChange(index, 'rating', e.target.value, true)}
                     min="1"
                     max="4"
@@ -182,36 +173,36 @@ const Strength = () => {
               ))}
             </div> 
             <div className='flex flex-col items-center'>
-              <h2 className="text-xl font-bold mb-4 ">Weaknesses</h2>
-              <label htmlFor="numWeaknesses" className="block mb-2">Number of Weaknesses:</label>
+              <h2 className="text-xl font-bold mb-4 ">Threats</h2>
+              <label htmlFor="numThreats" className="block mb-2">Number of Threats:</label>
               <input
                 type="number"
-                id="numWeaknesses"
-                name="numWeaknesses"
-                value={numWeaknesses}
-                onChange={(e) => setNumWeaknesses(e.target.value)}
-                placeholder="Enter number of weaknesses"
+                id="numThreats"
+                name="numThreats"
+                value={numThreats}
+                onChange={(e) => setNumThreats(e.target.value)}
+                placeholder="Enter number of threats"
                 className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
               />
 
-              {displayWeaknessParams && weaknessesData.map((weakness, index) => (
+              {displayThreatParams && threatsData.map((threat, index) => (
                 <div key={index}>
-                  <label htmlFor={`weakness${index + 1}`} className="block mb-2">Weakness {index + 1}:</label>
+                  <label htmlFor={`threat${index + 1}`} className="block mb-2">Threat {index + 1}:</label>
                   <input
                     type="text"
-                    id={`weakness${index + 1}`}
-                    name={`weakness${index + 1}`}
-                    value={weakness.weakness}
-                    onChange={(e) => handleChange(index, 'weakness', e.target.value, false)}
-                    placeholder={`Enter weakness ${index + 1}`}
+                    id={`threat${index + 1}`}
+                    name={`threat${index + 1}`}
+                    value={threat.threat}
+                    onChange={(e) => handleChange(index, 'threat', e.target.value, false)}
+                    placeholder={`Enter threat ${index + 1}`}
                     className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
                   />
-                  <label htmlFor={`weaknessWeight${index + 1}`} className="block mb-2">Weight:</label>
+                  <label htmlFor={`threatWeight${index + 1}`} className="block mb-2">Weight:</label>
                   <input
                     type="number"
-                    id={`weaknessWeight${index + 1}`}
-                    name={`weaknessWeight${index + 1}`}
-                    value={weakness.weight}
+                    id={`threatWeight${index + 1}`}
+                    name={`threatWeight${index + 1}`}
+                    value={threat.weight}
                     onChange={(e) => handleChange(index, 'weight', e.target.value, false)}
                     step="0.01"
                     min="0"
@@ -219,12 +210,12 @@ const Strength = () => {
                     placeholder="Enter weight (0-1)"
                     className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
                   />
-                  <label htmlFor={`weaknessRating${index + 1}`} className="block mb-2">Rating:</label>
+                  <label htmlFor={`threatRating${index + 1}`} className="block mb-2">Rating:</label>
                   <input
                     type="number"
-                    id={`weaknessRating${index + 1}`}
-                    name={`weaknessRating${index + 1}`}
-                    value={weakness.rating}
+                    id={`threatRating${index + 1}`}
+                    name={`threatRating${index + 1}`}
+                    value={threat.rating}
                     onChange={(e) => handleChange(index, 'rating', e.target.value, false)}
                     min="1"
                     max="4"
@@ -239,7 +230,7 @@ const Strength = () => {
             type="button"
             onClick={displayParams ? handleSubmit : () => {
               handleDisplayParams();
-              handleWeaknessDisplayParams();
+              handleThreatDisplayParams();
             }}
             className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
           >
@@ -248,7 +239,7 @@ const Strength = () => {
         </form>
       </div>
 
-      {(showTable || showWeaknessTable) && (
+      {(showTable || showThreatTable) && (
         <div className="mt-8 mx-auto">
           <table className="min-w-full divide-y divide-gray-200 rounded-md overflow-hidden">
             <thead className="bg-gray-50">
@@ -264,35 +255,35 @@ const Strength = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {tableData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">Strength</td>
+                  <td className="px-6 py-4 whitespace-nowrap">Opportunity</td>
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.strength}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.opportunity}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.weight}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.rating}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.score}</td>
                 </tr>
               ))}
-              {weaknessTableData.map((item, index) => (
+              {threatTableData.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">Weakness</td>
+                  <td className="px-6 py-4 whitespace-nowrap">Threat</td>
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.weakness}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.threat}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.weight}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.rating}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.score}</td>
                 </tr>
               ))}
               <tr className="bg-gray-100">
-                <td colSpan="5" className="px-6 py-4 text-right font-bold">Total Sum</td>
+                <td colSpan="5" className="px-6 py-4 text-right font-bold">Total Score</td>
                 <td className="px-6 py-4 whitespace-nowrap font-bold">
-                  {tableData.reduce((total, item) => total + item.score, 0) + weaknessTableData.reduce((total, item) => total + item.score, 0)}
+                  {tableData.reduce((total, item) => total + item.score, 0) + threatTableData.reduce((total, item) => total + item.score, 0)}
                 </td>
               </tr> 
             </tbody>
           </table>
           <div className="mt-4 flex justify-center">
-            <Link to="/other-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-              Go to Other Page
+            <Link to="/csf-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              Go to csf Page
             </Link>
           </div>
         </div>
@@ -301,4 +292,4 @@ const Strength = () => {
   );
 };
 
-export default Strength;
+export default OppandThreat;
