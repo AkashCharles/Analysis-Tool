@@ -93,8 +93,8 @@ const CSF = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-      <h1 className="text-3xl font-bold text-center mb-8">Opportunities Analysis</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center bg-gradient-to-r from-red-900  to-blue-950">
+      <h1 className="text-3xl font-bold text-center mb-8 text-white">Competitive Profile Matrix</h1>
       <div className="flex flex-wrap justify-center">
         <form className="max-w-[30vw] mx-4 bg-white p-8 border border-gray-300 rounded-lg">
           <div className='flex flex-col items-center'>
@@ -225,7 +225,7 @@ const CSF = () => {
           </table>
           <div className="mt-4 flex justify-center">
             <Link to="/bcg-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-              Go to csf Page
+              Go to csf Pages
             </Link>
           </div>
         </div>

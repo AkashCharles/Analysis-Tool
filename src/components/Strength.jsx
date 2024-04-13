@@ -83,7 +83,7 @@ const Strength = () => {
       
       strengthsData.forEach(strength => {
         strengthBatch.push(addDoc(collection(db, "strengths"), {
-          displayName: user.displayName, // Add display name to the document
+          displayName: user.displayName, 
           strength: strength.strength,
           weight: strength.weight,
           rating: strength.rating
@@ -92,7 +92,7 @@ const Strength = () => {
       
       weaknessesData.forEach(weakness => {
         weaknessBatch.push(addDoc(collection(db, "weaknesses"), {
-          displayName: user.displayName, // Add display name to the document
+          displayName: user.displayName, 
           weakness: weakness.weakness,
           weight: weakness.weight,
           rating: weakness.rating
@@ -123,8 +123,9 @@ const Strength = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-      <h1 className="text-3xl font-bold text-center mb-8">Strengths and Weaknesses Analysis</h1>
+    <div className='='>
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center bg-gradient-to-r from-red-900  to-blue-950">
+      <h1 className="text-3xl font-bold text-center mb-8 text-white">Internal Factor Evaluation</h1>
       <div className="flex flex-wrap justify-center">
         <form className="max-w-[30vw] mx-4 bg-white p-8 border border-gray-300 rounded-lg">
           <div className='flex gap-3'>
@@ -297,6 +298,7 @@ const Strength = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
