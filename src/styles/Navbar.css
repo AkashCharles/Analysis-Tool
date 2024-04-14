@@ -1,121 +1,140 @@
+body {
+  zoom: 100%; /* Adjust the zoom level as needed */
+}
+
 .Navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 1.25rem;
-    height: 8vh;
-    align-items: center;
-    background-color: rgba(252, 252, 252, 0.103);
-    opacity: 0.8;
-    border-radius: 25px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  height: 8vh;
+  align-items: center;
+  background-color: rgba(252, 252, 252, 0.103);
+  opacity: 0.8;
+  border-radius: 25px;
+}
 
-  }
-  
+.navbarcontents {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
 
-  .navbarcontents {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .texts {
-    color: white;
-    font-size: 16px; 
-  }
+.texts {
+  color: white;
+  font-size: 16px; 
+}
 
-  .login {
-    margin-top: 13px;
-  }
+.login {
+  margin-top: 13px;
+}
 
-  .image {
-    background-image: url('../images/background1.jpg');
-    background-size: cover; 
-    background-position: center; 
-    width: 100vw; 
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1; 
-  }
-  
-  .hero {
-    padding: 20px;
-    margin-left: 50px;
-    margin-top: 150px;
-  }
-  
-  .hero-content {
-    width: 50%; 
-  }
-  
-  .heading-text {
-    font-size: 50px;
-    font-weight: bold;
-    color: #ffffff;
-    margin: 0;
-  }
+.image {
+  background-image: url('../images/background1.jpg');
+  background-size: cover; 
+  background-position: center; 
+  width: 100vw; 
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1; 
+}
 
-  .secondary-text {
-    margin-top: 50px;
-    font-size: 25px;
-    color: #ffffff;
-  }
+.hero {
+  padding: 20px;
+  margin-left: 50px;
+  margin-top: 150px;
+}
 
-  .button-spacing {
-    display: flex;
-    gap: 50px;
-    padding: 10px;
-    margin-top: 80px;
-    margin-left: 100px;
-  }
+.hero-content {
+  width: 50%; 
+}
 
-  .button-spacing button {
-    margin-right: 50px;
-    font-size: 20px; 
-    padding: 20px 80px;
-  }
-  
-  .start-button {
-    background-color: #3b5be7; 
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .start-button:hover {
-    background-color: #1139e9;
-  }
+.heading-text {
+  font-size: 50px;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+}
 
-  .learn-more {
-    color: #ffffff;
-    cursor: pointer;
-    text-decoration: none; 
-    transition: text-decoration 0.3s ease; 
-    font-size: 20px; 
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .learn-more:hover {
-    text-decoration: underline;
-  }
-  
-  .arrow {
-    display: inline-block;
-    margin-left: 5px;
-    transition: transform 0.3s ease;
-  }
-  
-  .learn-more:hover .arrow {
-    transform: translateX(5px); 
-  }
+.secondary-text {
+  margin-top: 50px;
+  font-size: 25px;
+  color: #ffffff;
+}
 
+.button-spacing {
+  display: flex;
+  gap: 50px;
+  padding: 10px;
+  margin-top: 80px;
+  margin-left: 100px;
+}
+
+.button-spacing button {
+  margin-right: 50px;
+  font-size: 20px; 
+  padding: 20px 80px;
+}
+
+.button-cylinder {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 2px solid transparent; /* Set border to transparent initially */
+  border-radius: 30px; /* Adjust the border radius as needed to make it look like a cylinder */
+  background-color: transparent; /* Set background color to transparent */
+  color: white; /* Set text color */
+  text-decoration: none; /* Remove underline */
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Add transition effects */
+}
+
+.button-cylinder:hover {
+  background-color: rgba(255, 255, 255, 0.695); /* Semi-transparent white */
+  border-color: rgb(255, 255, 255); /* Semi-transparent white */
+  color: black; /* Change text color to black */
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}
+
+.start-button {
+  background-color: #3b5be7; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.start-button:hover {
+  background-color: #1139e9;
+}
+
+.learn-more {
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none; 
+  transition: text-decoration 0.3s ease; 
+  font-size: 20px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.learn-more:hover {
+  text-decoration: underline;
+}
+
+.arrow {
+  display: inline-block;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.learn-more:hover .arrow {
+  transform: translateX(5px); 
+}

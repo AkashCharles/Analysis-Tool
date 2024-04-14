@@ -45,16 +45,21 @@ function Login() {
 
   if (isConnected && user && user.displayName) { 
     return (
-      <div>
-        Hello {user.displayName}{' '}
-        <button onClick={() => logout({ returnTo: window.location.origin })}>
-          Log out
-        </button>
-      </div>
+      
+
+<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <button class="button-cylinder" onClick={() => logout({ returnTo: window.location.origin })}>
+    Log out
+  </button>
+  <span>Hello {user.displayName}</span>
+</div>
+
+
+
     );
   } else {
     return (
-      <button
+      <button 
         className="btn btn-outline-success"
         id="login"
         onClick={() => connectWithPopup({ accessId: "rIOaoDFI8TRxHFwRPXrm" })}

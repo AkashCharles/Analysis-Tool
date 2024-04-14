@@ -12,13 +12,13 @@ const Navbar = () => {
             </div>
             <div className=' flex justify-between w-[30%] '>
                 <div>
-                    <a href="">Home</a>
+                    <a href="" class="button-cylinder" >Home</a>
                 </div>
                 <div>
-                    <a href="">Start</a>
+                    <a href="" class="button-cylinder" >Start</a>
                 </div>
                 <div>
-                    <a href="">About</a>
+                    <a href="" class="button-cylinder" >About</a>
                 </div>
             </div>
             <div className=''>

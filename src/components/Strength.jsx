@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFirestore, addDoc, collection } from "firebase/firestore"; 
 import { useEarthoOne } from '@eartho/one-client-react';
 import { Link } from 'react-router-dom';
@@ -122,14 +122,35 @@ const Strength = () => {
     isStrength ? setStrengthsData(newData) : setWeaknessesData(newData);
   };
 
+  const [backgroundPosition, setBackgroundPosition] = useState(30);
+  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (backgroundPosition <= 20) {
+        setDirection(1);
+      } else if (backgroundPosition >=70) {
+        setDirection(-1);
+      }
+      setBackgroundPosition(prevPosition => prevPosition + direction);
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, [backgroundPosition, direction]);
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(to right, #E6085D 30%, #1047C6 80%)`,
+    backgroundPosition: `${backgroundPosition}% 50%`,
+    backgroundSize: '400% 400%',
+  };
+
   return (
-    <div className='='>
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center bg-gradient-to-r from-red-900  to-blue-950">
+    <div className="min-h-screen flex flex-col justify-center" style={gradientStyle}>
       <h1 className="text-3xl font-bold text-center mb-8 text-white">Internal Factor Evaluation</h1>
       <div className="flex flex-wrap justify-center">
         <form className="max-w-[30vw] mx-4 bg-white p-8 border border-gray-300 rounded-lg">
-          <div className='flex gap-3'>
-            <div  className='flex flex-col items-center'>
+          <div>
+            <div className='flex flex-col items-center'>
               <h2 className="text-xl font-bold mb-4">Strengths</h2>
               <label htmlFor="numStrengths" className="block mb-2">Number of Strengths:</label>
               <input
@@ -141,49 +162,54 @@ const Strength = () => {
                 placeholder="Enter number of strengths"
                 className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
               />
-
-              {displayParams && strengthsData.map((strength, index) => (
-                <div key={index}>
-                  <label htmlFor={`strength${index + 1}`} className="block mb-2">Strength {index + 1}:</label>
-                  <input
-                    type="text"
-                    id={`strength${index + 1}`}
-                    name={`strength${index + 1}`}
-                    value={strength.strength}
-                    onChange={(e) => handleChange(index, 'strength', e.target.value, true)}
-                    placeholder={`Enter strength ${index + 1}`}
-                    className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
-                  />
-                  <label htmlFor={`strengthWeight${index + 1}`} className="block mb-2">Weight:</label>
-                  <input
-                    type="number"
-                    id={`strengthWeight${index + 1}`}
-                    name={`strengthWeight${index + 1}`}
-                    value={strength.weight}
-                    onChange={(e) => handleChange(index, 'weight', e.target.value, true)}
-                    step="0.01"
-                    min="0"
-                    max="1"
-                    placeholder="Enter weight (0-1)"
-                    className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
-                  />
-                  <label htmlFor={`strengthRating${index + 1}`} className="block mb-2">Rating:</label>
-                  <input
-                    type="number"
-                    id={`strengthRating${index + 1}`}
-                    name={`strengthRating${index + 1}`}
-                    value={strength.rating}
-                    onChange={(e) => handleChange(index, 'rating', e.target.value, true)}
-                    min="1"
-                    max="4"
-                    placeholder="Enter rating (1-4)"
-                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-                  />
+              {displayParams && (
+                <div className="flex flex-col gap-2">
+                  {strengthsData.map((strength, index) => (
+                    <div key={index} className="flex gap-2">
+                      <input
+                        type="text"
+                        id={`strength${index + 1}`}
+                        name={`strength${index + 1}`}
+                        value={strength.strength}
+                        onChange={(e) => handleChange(index, 'strength', e.target.value, true)}
+                        placeholder={`Enter strength ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="number"
+                        id={`strengthWeight${index + 1}`}
+                        name={`strengthWeight${index + 1}`}
+                        value={strength.weight}
+                        onChange={(e) => handleChange(index, 'weight', e.target.value, true)}
+                        placeholder={`Weight ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="number"
+                        id={`strengthRating${index + 1}`}
+                        name={`strengthRating${index + 1}`}
+                        value={strength.rating}
+                        onChange={(e) => handleChange(index, 'rating', e.target.value, true)}
+                        placeholder={`Rating ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div> 
-            <div className='flex flex-col items-center'>
-              <h2 className="text-xl font-bold mb-4 ">Weaknesses</h2>
+              )}
+              {!displayParams && (
+                <button
+                  type="button"
+                  onClick={handleDisplayParams}
+                  className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                >
+                  Add Strengths
+                </button>
+              )}
+            </div>
+
+            <div className='flex flex-col items-center mt-8'>
+              <h2 className="text-xl font-bold mb-4">Weaknesses</h2>
               <label htmlFor="numWeaknesses" className="block mb-2">Number of Weaknesses:</label>
               <input
                 type="number"
@@ -194,111 +220,97 @@ const Strength = () => {
                 placeholder="Enter number of weaknesses"
                 className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
               />
-
-              {displayWeaknessParams && weaknessesData.map((weakness, index) => (
-                <div key={index}>
-                  <label htmlFor={`weakness${index + 1}`} className="block mb-2">Weakness {index + 1}:</label>
-                  <input
-                    type="text"
-                    id={`weakness${index + 1}`}
-                    name={`weakness${index + 1}`}
-                    value={weakness.weakness}
-                    onChange={(e) => handleChange(index, 'weakness', e.target.value, false)}
-                    placeholder={`Enter weakness ${index + 1}`}
-                    className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
-                  />
-                  <label htmlFor={`weaknessWeight${index + 1}`} className="block mb-2">Weight:</label>
-                  <input
-                    type="number"
-                    id={`weaknessWeight${index + 1}`}
-                    name={`weaknessWeight${index + 1}`}
-                    value={weakness.weight}
-                    onChange={(e) => handleChange(index, 'weight', e.target.value, false)}
-                    step="0.01"
-                    min="0"
-                    max="1"
-                    placeholder="Enter weight (0-1)"
-                    className="w-full px-4 py-2 mb-2 border border-gray-300 rounded-md"
-                  />
-                  <label htmlFor={`weaknessRating${index + 1}`} className="block mb-2">Rating:</label>
-                  <input
-                    type="number"
-                    id={`weaknessRating${index + 1}`}
-                    name={`weaknessRating${index + 1}`}
-                    value={weakness.rating}
-                    onChange={(e) => handleChange(index, 'rating', e.target.value, false)}
-                    min="1"
-                    max="4"
-                    placeholder="Enter rating (1-4)"
-                    className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
-                  />
+              {displayWeaknessParams && (
+                <div className="flex flex-col gap-2">
+                  {weaknessesData.map((weakness, index) => (
+                    <div key={index} className="flex gap-2">
+                      <input
+                        type="text"
+                        id={`weakness${index + 1}`}
+                        name={`weakness${index + 1}`}
+                        value={weakness.weakness}
+                        onChange={(e) => handleChange(index, 'weakness', e.target.value, false)}
+                        placeholder={`Enter weakness ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="number"
+                        id={`weaknessWeight${index + 1}`}
+                        name={`weaknessWeight${index + 1}`}
+                        value={weakness.weight}
+                        onChange={(e) => handleChange(index, 'weight', e.target.value, false)}
+                        placeholder={`Weight ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="number"
+                        id={`weaknessRating${index + 1}`}
+                        name={`weaknessRating${index + 1}`}
+                        value={weakness.rating}
+                        onChange={(e) => handleChange(index, 'rating', e.target.value, false)}
+                        placeholder={`Rating ${index + 1}`}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              {!displayWeaknessParams && (
+                <button
+                  type="button"
+                  onClick={handleWeaknessDisplayParams}
+                  className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                >
+                  Add Weaknesses
+                </button>
+              )}
             </div>
           </div>
+
           <button
-            type="button"
-            onClick={displayParams ? handleSubmit : () => {
-              handleDisplayParams();
-              handleWeaknessDisplayParams();
-            }}
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+            type="submit"
+            onClick={handleSubmit}
+            className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
           >
-            {displayParams ? 'Submit' : 'Display Parameters'}
+            Submit
           </button>
         </form>
       </div>
 
       {(showTable || showWeaknessTable) && (
         <div className="mt-8 mx-auto">
-          <table className="min-w-full divide-y divide-gray-200 rounded-md overflow-hidden">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr className="bg-gray-200 border border-gray-400">
+                <th className="px-4 py-2">Strength/Weakness</th>
+                <th className="px-4 py-2">Weight</th>
+                <th className="px-4 py-2">Rating</th>
+                <th className="px-4 py-2">Score</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tableData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">Strength</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.strength}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.weight}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.rating}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.score}</td>
-                </tr>
-              ))}
-              {weaknessTableData.map((item, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">Weakness</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.weakness}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.weight}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.rating}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.score}</td>
-                </tr>
-              ))}
-              <tr className="bg-gray-100">
-                <td colSpan="5" className="px-6 py-4 text-right font-bold">Total Sum</td>
-                <td className="px-6 py-4 whitespace-nowrap font-bold">
-                  {tableData.reduce((total, item) => total + item.score, 0) + weaknessTableData.reduce((total, item) => total + item.score, 0)}
-                </td>
-              </tr> 
+            <tbody>
+              {showTable &&
+                tableData.map((strength, index) => (
+                  <tr key={index} className="border border-gray-400">
+                    <td className="px-4 py-2">{strength.strength}</td>
+                    <td className="px-4 py-2">{strength.weight}</td>
+                    <td className="px-4 py-2">{strength.rating}</td>
+                    <td className="px-4 py-2">{strength.score}</td>
+                  </tr>
+                ))}
+              {showWeaknessTable &&
+                weaknessTableData.map((weakness, index) => (
+                  <tr key={index} className="border border-gray-400">
+                    <td className="px-4 py-2">{weakness.weakness}</td>
+                    <td className="px-4 py-2">{weakness.weight}</td>
+                    <td className="px-4 py-2">{weakness.rating}</td>
+                    <td className="px-4 py-2">{weakness.score}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
-          <div className="mt-4 flex justify-center">
-            <Link to="/other-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
-              Go to Other Page
-            </Link>
-          </div>
         </div>
       )}
-    </div>
     </div>
   );
 };
