@@ -309,6 +309,11 @@ const Strength = () => {
                 ))}
             </tbody>
           </table>
+          <div className="mt-4 flex justify-center">
+            <Link to="/other-page" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              Go to Other Page
+            </Link>
+          </div>
         </div>
       )}
     </div>

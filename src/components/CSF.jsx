@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { getFirestore, addDoc, collection } from "firebase/firestore"; 
 import { useEarthoOne } from '@eartho/one-client-react';
 import { Link } from 'react-router-dom';
@@ -92,8 +92,33 @@ const CSF = () => {
     return total.toFixed(2);
   };
 
+
+  const [backgroundPosition, setBackgroundPosition] = useState(30);
+  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (backgroundPosition <= 20) {
+        setDirection(1);
+      } else if (backgroundPosition >=70) {
+        setDirection(-1);
+      }
+      setBackgroundPosition(prevPosition => prevPosition + direction);
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, [backgroundPosition, direction]);
+
+  const gradientStyle = {
+    backgroundImage: `linear-gradient(to right, #000080 30%, #DC143C 80%)`,
+    backgroundPosition: `${backgroundPosition}% 50%`,
+    backgroundSize: '400% 400%',
+  };
+
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center bg-gradient-to-r from-red-900  to-blue-950">
+    <div className="min-h-screen flex flex-col justify-center" style={gradientStyle}>
+    
       <h1 className="text-3xl font-bold text-center mb-8 text-white">Competitive Profile Matrix</h1>
       <div className="flex flex-wrap justify-center">
         <form className="max-w-[30vw] mx-4 bg-white p-8 border border-gray-300 rounded-lg">
