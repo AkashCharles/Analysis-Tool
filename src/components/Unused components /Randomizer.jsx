@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../firebase.js'; // Add this line prevent firebase not loading error
+import '../../firebase.js'; // Add this line prevent firebase not loading error
 import { getFirestore, addDoc, collection } from "firebase/firestore"; 
 
 function Randomizer() {

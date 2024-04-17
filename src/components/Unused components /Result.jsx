@@ -86,3 +86,26 @@ const Result = ({ userDisplayName }) => {
 };
 
 export default Result;
+
+
+
+
+
+//const words = ['IFE', 'EFE', 'CSF', 'Word4', 'Word5', 'Word6', 'Word7', 'Word8'];
+
+//const handleButtonClick = (page) => {
+  //navigate(page); <button
+//   type="button"
+//   onClick={() => handleAddField('strengths')}
+//   className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+// >
+//   +
+// </button>
+// <button
+//   type="button"
+//   onClick={() => handleRemoveField(index, 'strengths')}
+//   className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+// >
+//   -
+// </button>
+//};

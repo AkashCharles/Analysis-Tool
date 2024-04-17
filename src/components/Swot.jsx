@@ -3,6 +3,7 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import Navbar from "./Navbar";
 import { useNavigate } from 'react-router-dom';
+import CSF from './CSF';
 
 const Swot = () => {
   const [strengthsData, setStrengthsData] = useState([{ strength: '', weight: '', rating: '' }]);
@@ -84,7 +85,7 @@ const Swot = () => {
       console.error("Error adding document: ", error);
     }
 
-      navigate('/csf-page');
+      
   };
 
   const calculateScore = (data) => {
@@ -130,6 +131,7 @@ const Swot = () => {
                     placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
+                  
                   <button
                     type="button"
                     onClick={() => handleAddField('strengths')}
@@ -137,13 +139,15 @@ const Swot = () => {
                   >
                     +
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveField(index, 'strengths')}
-                    className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                  >
-                    -
-                  </button>
+                  {strengthsData.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveField(index, 'strengths')}
+                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+                    >
+                      -
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -180,19 +184,19 @@ const Swot = () => {
                   >
                     +
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveField(index, 'weaknesses')}
-                    className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                  >
-                    -
-                  </button>
+                  {weaknessesData.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveField(index, 'weaknesses')}
+                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+                    >
+                      -
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8 mt-8">
             <div>
               <h2 className="text-xl font-bold mb-4">Opportunities</h2>
               {opportunitiesData.map((opportunity, index) => (
@@ -218,20 +222,22 @@ const Swot = () => {
                     placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
-                  <button
+                 <button
                     type="button"
                     onClick={() => handleAddField('opportunities')}
                     className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
                   >
                     +
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveField(index, 'opportunities')}
-                    className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                  >
-                    -
-                  </button>
+                  {opportunitiesData.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveField(index, 'opportunities')}
+                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+                    >
+                      -
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -268,18 +274,19 @@ const Swot = () => {
                   >
                     +
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveField(index, 'threats')}
-                    className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                  >
-                    -
-                  </button>
+                  {threatsData.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveField(index, 'threats')}
+                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+                    >
+                      -
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
           </div>
-
           <button
             type="submit"
             className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
@@ -289,6 +296,7 @@ const Swot = () => {
         </form>
 
       </div>
+      <CSF />
     </div>
   );
 };
