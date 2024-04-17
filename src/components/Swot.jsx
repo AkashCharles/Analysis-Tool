@@ -4,6 +4,7 @@ import { useEarthoOne } from '@eartho/one-client-react';
 import Navbar from "./Navbar";
 import { useNavigate } from 'react-router-dom';
 import CSF from './CSF';
+import BCG from './BCG';
 
 const Swot = () => {
   const [strengthsData, setStrengthsData] = useState([{ strength: '', weight: '', rating: '' }]);
@@ -297,6 +298,7 @@ const Swot = () => {
 
       </div>
       <CSF />
+      <BCG />
     </div>
   );
 };

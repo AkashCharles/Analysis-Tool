@@ -19,12 +19,10 @@ function Login() {
     const saveDisplayName = async () => {
       if (isConnected && user && user.displayName) {
         try {
-          // Check if user.userId is defined, use a default value if it's not available
           const userId = user.userId || 'unknown_user';
           const docRef = await addDoc(collection(db, 'users'), {
             displayName: user.displayName,
             userId: userId,
-            // Add other user data you want to store here
           });
           console.log('Display name saved with ID: ', docRef.id);
         } catch (error) {

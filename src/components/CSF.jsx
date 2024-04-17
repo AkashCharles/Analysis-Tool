@@ -67,7 +67,7 @@ const CSF = () => {
   };
 
   return (
-    <div className='bg-slate-700 min-h-screen'>
+    <div className='bg-slate-700 '>
       <div className="flex flex-col items-center justify-center py-10">
         <h1 className="text-3xl font-bold text-white mb-8">Critical Success Factors</h1>
         <form className="max-w-[80vw] w-full bg-white p-8 border border-gray-300 rounded-lg" onSubmit={handleSubmit}>
@@ -132,8 +132,7 @@ const CSF = () => {
           </div>
           <button
             type="submit"
-            className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-          >
+            className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600">
             Submit
           </button>
         </form>
