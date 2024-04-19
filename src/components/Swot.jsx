@@ -298,7 +298,6 @@ const Swot = () => {
 
       </div>
       <CSF />
-      <BCG />
     </div>
   );
 };

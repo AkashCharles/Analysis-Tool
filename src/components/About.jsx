@@ -15,7 +15,6 @@ const About = () => {
     setDisplayText(step1Text);
   };
 
-  // Add other click handlers and text variables as needed for other steps
 
   return (
     <div>
