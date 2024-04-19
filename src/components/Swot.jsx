@@ -85,8 +85,6 @@ const Swot = () => {
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-
-      
   };
 
   const calculateScore = (data) => {
@@ -132,7 +130,6 @@ const Swot = () => {
                     placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
-                  
                   <button
                     type="button"
                     onClick={() => handleAddField('strengths')}
@@ -297,6 +294,7 @@ const Swot = () => {
         </form>
 
       </div>
+      <BCG />
       <CSF />
     </div>
   );
