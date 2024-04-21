@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
-import { getFirestore, addDoc, collection } from "firebase/firestore"; 
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import Navbar from "./Navbar";
 import { useNavigate } from 'react-router-dom';
 import CSF from './CSF';
 import BCG from './BCG';
+import IE from './IE';
+import Space from './Space';
+import Grand from './Grand';
+
 
 const Swot = () => {
   const [strengthsData, setStrengthsData] = useState([{ strength: '', weight: '', rating: '' }]);
   const [weaknessesData, setWeaknessesData] = useState([{ weakness: '', weight: '', rating: '' }]);
   const [opportunitiesData, setOpportunitiesData] = useState([{ opportunity: '', weight: '', rating: '' }]);
   const [threatsData, setThreatsData] = useState([{ threat: '', weight: '', rating: '' }]);
-  const [totalScore, setTotalScore] = useState(0); 
+  const [totalScore, setTotalScore] = useState(0);
   const db = getFirestore();
   const { user } = useEarthoOne();
   const navigate = useNavigate();
+
 
   const handleChange = (index, field, value, category) => {
     const newData = category === 'strengths' ? [...strengthsData] : category === 'weaknesses' ? [...weaknessesData] : category === 'opportunities' ? [...opportunitiesData] : [...threatsData];
@@ -22,16 +27,19 @@ const Swot = () => {
     category === 'strengths' ? setStrengthsData(newData) : category === 'weaknesses' ? setWeaknessesData(newData) : category === 'opportunities' ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
 
+
   const handleAddField = (category) => {
     const newData = category === 'strengths' ? [...strengthsData, { strength: '', weight: '', rating: '' }] : category === 'weaknesses' ? [...weaknessesData, { weakness: '', weight: '', rating: '' }] : category === 'opportunities' ? [...opportunitiesData, { opportunity: '', weight: '', rating: '' }] : [...threatsData, { threat: '', weight: '', rating: '' }];
     category === 'strengths' ? setStrengthsData(newData) : category === 'weaknesses' ? setWeaknessesData(newData) : category === 'opportunities' ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
+
 
   const handleRemoveField = (index, category) => {
     const newData = category === 'strengths' ? [...strengthsData] : category === 'weaknesses' ? [...weaknessesData] : category === 'opportunities' ? [...opportunitiesData] : [...threatsData];
     newData.splice(index, 1);
     category === 'strengths' ? setStrengthsData(newData) : category === 'weaknesses' ? setWeaknessesData(newData) : category === 'opportunities' ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -45,6 +53,7 @@ const Swot = () => {
         })
       );
 
+
       const weaknessBatch = weaknessesData.map(async (weakness) =>
         await addDoc(collection(db, "weaknesses"), {
           displayName: user.displayName,
@@ -53,6 +62,7 @@ const Swot = () => {
           rating: weakness.rating
         })
       );
+
 
       const opportunityBatch = opportunitiesData.map(async (opportunity) =>
         await addDoc(collection(db, "opportunities"), {
@@ -63,6 +73,7 @@ const Swot = () => {
         })
       );
 
+
       const threatBatch = threatsData.map(async (threat) =>
         await addDoc(collection(db, "threats"), {
           displayName: user.displayName,
@@ -72,8 +83,10 @@ const Swot = () => {
         })
       );
 
+
       await Promise.all([...strengthBatch, ...weaknessBatch, ...opportunityBatch, ...threatBatch]);
       alert("Data saved to Firestore");
+
 
       const totalOpportunityScore = calculateScore(opportunitiesData);
       const totalThreatScore = calculateScore(threatsData);
@@ -81,11 +94,16 @@ const Swot = () => {
       const totalWeaknessScore = calculateScore(weaknessesData);
       const totalSum = totalOpportunityScore + totalThreatScore + totalStrengthScore + totalWeaknessScore;
 
+
       setTotalScore(totalSum);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
+
+
+     
   };
+
 
   const calculateScore = (data) => {
     const calculatedData = data.map(item => ({
@@ -95,6 +113,7 @@ const Swot = () => {
     const totalScore = calculatedData.reduce((total, item) => total + item.score, 0);
     return totalScore;
   };
+
 
   return (
     <div className='bg-slate-700 min-h-screen'>
@@ -130,6 +149,7 @@ const Swot = () => {
                     placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
+                 
                   <button
                     type="button"
                     onClick={() => handleAddField('strengths')}
@@ -149,6 +169,7 @@ const Swot = () => {
                 </div>
               ))}
             </div>
+
 
             <div>
               <h2 className="text-xl font-bold mb-4">Weaknesses</h2>
@@ -195,6 +216,7 @@ const Swot = () => {
               ))}
             </div>
 
+
             <div>
               <h2 className="text-xl font-bold mb-4">Opportunities</h2>
               {opportunitiesData.map((opportunity, index) => (
@@ -239,6 +261,7 @@ const Swot = () => {
                 </div>
               ))}
             </div>
+
 
             <div>
               <h2 className="text-xl font-bold mb-4">Threats</h2>
@@ -293,11 +316,16 @@ const Swot = () => {
           </button>
         </form>
 
+
       </div>
-      <BCG />
       <CSF />
+      <BCG />
+      <IE />
+      <Space />
+      <Grand />
     </div>
   );
 };
+
 
 export default Swot;

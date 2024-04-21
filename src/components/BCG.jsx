@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import { getFirestore, addDoc, collection } from "firebase/firestore"; 
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import { useNavigate } from 'react-router-dom';
 
-const BCGMatrixForm = () => {
-  const [divisionData, setDivisionData] = useState([
-    { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' },
-    { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' },
-    { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' },
-    { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' },
-    { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' }
-  ]);
+
+const BCG = () => {
+  const [divisionData, setDivisionData] = useState([{ name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' }]);
   const [tableData, setTableData] = useState([]);
   const [dbError, setDbError] = useState(null);
   const db = getFirestore();
   const { user } = useEarthoOne();
   const navigate = useNavigate();
+
 
   const handleChange = (index, field, value) => {
     const newData = [...divisionData];
@@ -24,6 +20,20 @@ const BCGMatrixForm = () => {
     setDivisionData(newData);
     calculateTableData(newData);
   };
+
+
+  const handleAddField = () => {
+    setDivisionData([...divisionData, { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' }]);
+  };
+
+
+  const handleRemoveField = (index) => {
+    const newData = [...divisionData];
+    newData.splice(index, 1);
+    setDivisionData(newData);
+    calculateTableData(newData);
+  };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,8 +48,10 @@ const BCGMatrixForm = () => {
         })
       );
 
+
       await Promise.all(batch);
       alert("Data saved to Firestore");
+
 
       calculateTableData(divisionData);
     } catch (error) {
@@ -48,6 +60,7 @@ const BCGMatrixForm = () => {
     }
   };
 
+
   const calculateTableData = (data) => {
     const calculatedData = data.map(division => ({
       ...division,
@@ -55,6 +68,7 @@ const BCGMatrixForm = () => {
     }));
     setTableData(calculatedData);
   };
+
 
   return (
     <div className='bg-slate-700'>
@@ -65,7 +79,6 @@ const BCGMatrixForm = () => {
             {divisionData.map((division, index) => (
               <div key={index} className="flex gap-2 items-center mb-4">
                 <h3 className="text-base font-semibold mb-2">{index + 1}. <span>{' '}</span></h3>
-
                 <input
                   type="text"
                   value={division.name}
@@ -101,6 +114,22 @@ const BCGMatrixForm = () => {
                   readOnly
                   className="w-full px-4 py-2 border border-gray-300 rounded-md"
                 />
+                <button
+                  type="button"
+                  onClick={handleAddField}
+                  className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+                >
+                  +
+                </button>
+                {divisionData.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveField(index)}
+                    className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+                  >
+                    -
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -111,39 +140,11 @@ const BCGMatrixForm = () => {
           </button>
           {dbError && <p className="text-red-500 mt-4">{dbError}</p>}
         </form>
-        {tableData.length > 0 && (
-          <div className="mt-8 w-full mx-auto">
-            <h2 className="text-xl font-bold mb-4">BCG Matrix Table</h2>
-            <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f0f0f0' }}>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Division Name</th>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Revenues</th>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Top Firm Revenues</th>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Growth Rate (%)</th>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Division Market Growth Rate</th>
-                  <th style={{ border: '1px solid #ccc', padding: '0.5rem', fontWeight: 'bold', textAlign: 'left' }}>Relative Market Share</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((data, index) => (
-                  <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'transparent' }}>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.name}</td>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.revenues}</td>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.topFirmRevenues}</td>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.growthRate}</td>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.divisionMarketGrowth}</td>
-                    <td style={{ border: '1px solid #ccc', padding: '0.5rem', textAlign: 'left' }}>{data.relativeMarketShare}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {dbError && <p className="text-red-500 mt-4">{dbError}</p>}
+        {/* Table display code */}
       </div>
     </div>
   );
 };
 
-export default BCGMatrixForm;
+
+export default BCG;
