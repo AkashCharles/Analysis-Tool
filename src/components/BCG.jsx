@@ -3,29 +3,41 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import { useNavigate } from 'react-router-dom';
 
-
 const BCG = () => {
-  const [divisionData, setDivisionData] = useState([{ name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' }]);
+  const [divisionData, setDivisionData] = useState([{ name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '', category: '' }]);
   const [tableData, setTableData] = useState([]);
   const [dbError, setDbError] = useState(null);
   const db = getFirestore();
   const { user } = useEarthoOne();
   const navigate = useNavigate();
 
-
   const handleChange = (index, field, value) => {
     const newData = [...divisionData];
     newData[index][field] = value;
     newData[index].divisionMarketGrowth = parseFloat(newData[index].revenues) / parseFloat(newData[index].topFirmRevenues);
+    newData[index].category = categorizeDivision(newData[index]);
     setDivisionData(newData);
     calculateTableData(newData);
   };
 
+  const categorizeDivision = (division) => {
+    const marketShare = parseFloat(division.revenues) / parseFloat(division.topFirmRevenues);
+    const growthRate = parseFloat(division.growthRate);
 
-  const handleAddField = () => {
-    setDivisionData([...divisionData, { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '' }]);
+    if (marketShare > 0.5 && growthRate > 0.1) {
+      return 'Star';
+    } else if (marketShare <= 0.5 && growthRate > 0.1) {
+      return 'Question Mark';
+    } else if (marketShare > 0.5 && growthRate <= 0.1) {
+      return 'Cash Cow';
+    } else {
+      return 'Dog';
+    }
   };
 
+  const handleAddField = () => {
+    setDivisionData([...divisionData, { name: '', revenues: '', topFirmRevenues: '', growthRate: '', divisionMarketGrowth: '', category: '' }]);
+  };
 
   const handleRemoveField = (index) => {
     const newData = [...divisionData];
@@ -33,7 +45,6 @@ const BCG = () => {
     setDivisionData(newData);
     calculateTableData(newData);
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,10 +59,8 @@ const BCG = () => {
         })
       );
 
-
       await Promise.all(batch);
       alert("Data saved to Firestore");
-
 
       calculateTableData(divisionData);
     } catch (error) {
@@ -59,7 +68,6 @@ const BCG = () => {
       setDbError("Error saving data to Firestore");
     }
   };
-
 
   const calculateTableData = (data) => {
     const calculatedData = data.map(division => ({
@@ -69,6 +77,20 @@ const BCG = () => {
     setTableData(calculatedData);
   };
 
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'Star':
+        return 'text-green-600';
+      case 'Question Mark':
+        return 'text-yellow-600';
+      case 'Cash Cow':
+        return 'text-blue-600';
+      case 'Dog':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
 
   return (
     <div className='bg-slate-700'>
@@ -133,6 +155,17 @@ const BCG = () => {
               </div>
             ))}
           </div>
+          <div className="mt-8 bg-white rounded-lg p-4 shadow-md max-w-[80vw]">
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Division Categories:</h2>
+          <ul className="list-disc list-inside">
+            {divisionData.map((division, index) => (
+              <li key={index} className="flex items-center justify-between py-2 border-b border-gray-300">
+                <span className="text-gray-700">{division.name}</span>
+                <span className={`text-sm font-semibold ${getCategoryColor(division.category)}`}>{division.category}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
           <button
             type="submit"
             className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600">
@@ -140,11 +173,11 @@ const BCG = () => {
           </button>
           {dbError && <p className="text-red-500 mt-4">{dbError}</p>}
         </form>
+        
         {/* Table display code */}
       </div>
     </div>
   );
 };
-
 
 export default BCG;

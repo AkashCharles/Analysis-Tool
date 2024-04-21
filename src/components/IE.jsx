@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 
-
-
-
 const IE = () => {
   const [data, setData] = useState([{ impact: '', ease: '', impactRating: '', easeRating: '' }]);
   const [submittedData, setSubmittedData] = useState([]);
   const [dbError, setDbError] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
-
-
-
 
   const handleChange = (index, field, value) => {
     const newData = [...data];
@@ -20,14 +14,9 @@ const IE = () => {
   };
 
 
-
-
   const handleAddField = () => {
     setData([...data, { impact: '', ease: '', impactRating: '', easeRating: '' }]);
   };
-
-
-
 
   const handleRemoveField = (index) => {
     const newData = [...data];
@@ -35,18 +24,12 @@ const IE = () => {
     setData(newData);
   };
 
-
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       // Your Firestore logic goes here
       alert("Data saved to Firestore");
       setSubmittedData(data);
-
-
-
 
       // Calculate total score
       const totalSum = calculateTotalScore();
@@ -58,17 +41,11 @@ const IE = () => {
     }
   };
 
-
-
-
   const calculateTotalScore = () => {
     // Calculate total score here
     // This function will be implemented based on your specific requirements
     return 0; // Placeholder, replace with actual implementation
   };
-
-
-
 
   return (
     <div className="bg-slate-700">
@@ -133,29 +110,7 @@ const IE = () => {
           </button>
         </form>
         {dbError && <p className="text-red-500 mt-4">{dbError}</p>}
-        {showTable && (
-          <div className="mt-8 w-full mx-auto">
-            {/* Table display similar to the CSF component */}
-            {/* You can implement this based on your specific requirements */}
-            <h2 className="text-xl font-bold mb-4">IE Matrix Scores</h2>
-            <table className="w-full border-collapse border border-gray-400">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th>Factor</th>
-                  <th>Weight</th>
-                  <th>Rating A</th>
-                  <th>Rating B</th>
-                  <th>Rating C</th>
-                  {/* Add more headers as needed */}
-                </tr>
-              </thead>
-              <tbody>
-                {/* Render table rows here */}
-              </tbody>
-            </table>
-            <p className="mt-4">Total Score: {totalScore}</p>
-          </div>
-        )}
+       
       </div>
     </div>
   );
