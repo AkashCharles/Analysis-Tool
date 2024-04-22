@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { useEarthoOne } from '@eartho/one-client-react';
 import Navbar from "./Navbar";
@@ -9,17 +9,21 @@ import IE from './IE';
 import Space from './Space';
 import Grand from './Grand';
 
-
 const Swot = () => {
   const [strengthsData, setStrengthsData] = useState([{ strength: '', weight: '', rating: '' }]);
   const [weaknessesData, setWeaknessesData] = useState([{ weakness: '', weight: '', rating: '' }]);
   const [opportunitiesData, setOpportunitiesData] = useState([{ opportunity: '', weight: '', rating: '' }]);
   const [threatsData, setThreatsData] = useState([{ threat: '', weight: '', rating: '' }]);
-  const [totalScore, setTotalScore] = useState(0);
+  const [totalIFE, setTotalIFE] = useState(0);
+  const [totalEFE, setTotalEFE] = useState(0);
   const db = getFirestore();
   const { user } = useEarthoOne();
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    calculateTotals();
+  }, [strengthsData, weaknessesData, opportunitiesData, threatsData]);
 
   const handleChange = (index, field, value, category) => {
     const newData = category === 'strengths' ? [...strengthsData] : category === 'weaknesses' ? [...weaknessesData] : category === 'opportunities' ? [...opportunitiesData] : [...threatsData];
@@ -33,13 +37,11 @@ const Swot = () => {
     category === 'strengths' ? setStrengthsData(newData) : category === 'weaknesses' ? setWeaknessesData(newData) : category === 'opportunities' ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
 
-
   const handleRemoveField = (index, category) => {
     const newData = category === 'strengths' ? [...strengthsData] : category === 'weaknesses' ? [...weaknessesData] : category === 'opportunities' ? [...opportunitiesData] : [...threatsData];
     newData.splice(index, 1);
     category === 'strengths' ? setStrengthsData(newData) : category === 'weaknesses' ? setWeaknessesData(newData) : category === 'opportunities' ? setOpportunitiesData(newData) : setThreatsData(newData);
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,7 +55,6 @@ const Swot = () => {
         })
       );
 
-
       const weaknessBatch = weaknessesData.map(async (weakness) =>
         await addDoc(collection(db, "weaknesses"), {
           displayName: user.displayName,
@@ -62,7 +63,6 @@ const Swot = () => {
           rating: weakness.rating
         })
       );
-
 
       const opportunityBatch = opportunitiesData.map(async (opportunity) =>
         await addDoc(collection(db, "opportunities"), {
@@ -73,7 +73,6 @@ const Swot = () => {
         })
       );
 
-
       const threatBatch = threatsData.map(async (threat) =>
         await addDoc(collection(db, "threats"), {
           displayName: user.displayName,
@@ -83,36 +82,54 @@ const Swot = () => {
         })
       );
 
-
       await Promise.all([...strengthBatch, ...weaknessBatch, ...opportunityBatch, ...threatBatch]);
       alert("Data saved to Firestore");
 
-
-      const totalOpportunityScore = calculateScore(opportunitiesData);
-      const totalThreatScore = calculateScore(threatsData);
-      const totalStrengthScore = calculateScore(strengthsData);
-      const totalWeaknessScore = calculateScore(weaknessesData);
-      const totalSum = totalOpportunityScore + totalThreatScore + totalStrengthScore + totalWeaknessScore;
-
-
-      setTotalScore(totalSum);
+      calculateTotals();
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-
-
-     
   };
-
 
   const calculateScore = (data) => {
     const calculatedData = data.map(item => ({
       ...item,
-      score: parseFloat(item.weight) * parseInt(item.rating)
+      score: (parseFloat(item.weight) || 0) * (parseInt(item.rating) || 0) 
     }));
     const totalScore = calculatedData.reduce((total, item) => total + item.score, 0);
     return totalScore;
   };
+
+  const calculateTotals = () => {
+    const totalStrengthScore = calculateScore(strengthsData);
+    const totalWeaknessScore = calculateScore(weaknessesData);
+    const totalOpportunityScore = calculateScore(opportunitiesData);
+    const totalThreatScore = calculateScore(threatsData);
+  
+    const totalIFEWeight = totalStrengthScore + totalWeaknessScore; 
+    const totalEFEWeight = totalOpportunityScore + totalThreatScore; 
+  
+    setTotalIFE(totalIFEWeight);
+    setTotalEFE(totalEFEWeight);
+  };
+
+  const calculateIFEWeight = () => {
+    const totalStrengthWeight = strengthsData.reduce((total, item) => total + (parseFloat(item.weight) || 0), 0);
+    const totalWeaknessWeight = weaknessesData.reduce((total, item) => total + (parseFloat(item.weight) || 0), 0);
+    const totalWeight = totalStrengthWeight + totalWeaknessWeight;
+    return isNaN(totalWeight) ? '0.00' : totalWeight.toFixed(2);
+  };
+  
+  const calculateEFEWeight = () => {
+    const totalOpportunityWeight = opportunitiesData.reduce((total, item) => total + (parseFloat(item.weight) || 0), 0);
+    const totalThreatWeight = threatsData.reduce((total, item) => total + (parseFloat(item.weight) || 0), 0);
+    const totalWeight = totalOpportunityWeight + totalThreatWeight;
+    return isNaN(totalWeight) ? '0.00' : totalWeight.toFixed(2);
+  };
+
+  const isIFEWeightValid = calculateIFEWeight() >= 0 && calculateIFEWeight() <= 1;
+
+  
 
 
   return (
@@ -308,6 +325,30 @@ const Swot = () => {
               ))}
             </div>
           </div>
+
+          <div className="flex justify-between w-full px-8 mt-8">
+            <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Total IFE Weight</h2>
+              <p className="text-2xl font-semibold text-green-500">{calculateIFEWeight()}</p>
+            </div>
+            <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Total IFE Score</h2>
+              <p className="text-2xl font-semibold text-green-500">{totalIFE.toFixed(2)}</p>
+            </div>
+            <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Total EFE Weight</h2>
+              <p className="text-2xl font-semibold text-green-500">{calculateEFEWeight()}</p>
+            </div>
+            <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Total EFE Score</h2>
+              <p className="text-2xl font-semibold text-green-500">{totalEFE.toFixed(2)}</p>
+            </div>
+          </div>
+
+          {!isIFEWeightValid && (
+            <div className="text-red-500 text-sm mb-4">IFE Weight should be between 0 and 1</div>
+          )}
+
           <button
             type="submit"
             className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"

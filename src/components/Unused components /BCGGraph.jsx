@@ -16,22 +16,22 @@ const BCGGraph = () => {
           {
             label: 'Stars',
             data: [{ x: 3, y: 7 }],
-            backgroundColor: 'rgba(255, 99, 132, 1)', // Adjust colors as needed
+            backgroundColor: 'rgba(255, 99, 132, 1)',
           },
           {
             label: 'Question Mark',
             data: [{ x: 7, y: 7 }],
-            backgroundColor: 'rgba(54, 162, 235, 1)', // Adjust colors as needed
+            backgroundColor: 'rgba(54, 162, 235, 1)', 
           },
           {
             label: 'Cash Cows',
             data: [{ x: 3, y: 3 }],
-            backgroundColor: 'rgba(255, 206, 86, 1)', // Adjust colors as needed
+            backgroundColor: 'rgba(255, 206, 86, 1)',
           },
           {
             label: 'Dogs',
             data: [{ x: 7, y: 3 }],
-            backgroundColor: 'rgba(75, 192, 192, 1)', // Adjust colors as needed
+            backgroundColor: 'rgba(75, 192, 192, 1)', 
           },
         ],
       },

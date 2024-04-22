@@ -80,18 +80,18 @@ body {
 .button-cylinder {
   display: inline-block;
   padding: 10px 20px;
-  border: 2px solid transparent; /* Set border to transparent initially */
-  border-radius: 30px; /* Adjust the border radius as needed to make it look like a cylinder */
-  background-color: transparent; /* Set background color to transparent */
-  color: white; /* Set text color */
-  text-decoration: none; /* Remove underline */
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Add transition effects */
+  border: 2px solid transparent; 
+  border-radius: 30px; 
+  background-color: transparent; 
+  color: white; 
+  text-decoration: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .button-cylinder:hover {
-  background-color: rgba(255, 255, 255, 0.695); /* Semi-transparent white */
-  border-color: rgb(255, 255, 255); /* Semi-transparent white */
-  color: black; /* Change text color to black */
+  background-color: rgba(255, 255, 255, 0.695); 
+  border-color: rgb(255, 255, 255);
+  color: black;
   transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
 

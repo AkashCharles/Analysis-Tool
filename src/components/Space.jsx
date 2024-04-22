@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 const Space = () => {
   const [firmName, setFirmName] = useState('');
   const [fpData, setFpData] = useState([
@@ -32,19 +31,56 @@ const Space = () => {
     { factor: 'Barriers to Entry into Market', rating: '' },
   ]);
 
+  const sumFactors = (data) => {
+    return data.reduce((sum, item) => sum + Number(item.rating || 0), 0);
+  };
+
+  const calculateXAxis = (ipData, cpData) => {
+    const ipSum = sumFactors(ipData);
+    const cpSum = sumFactors(cpData);
+    return ((ipSum / 5) + (cpSum / 5)).toFixed(2);
+  };
+
+  const calculateYAxis = (fpData, spData) => {
+    const fpSum = sumFactors(fpData);
+    const spSum = sumFactors(spData);
+    return ((fpSum / 5) + (spSum / 5)).toFixed(2);
+  };
+
+  const [xAxis, setXAxis] = useState(0);
+  const [yAxis, setYAxis] = useState(0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Submit logic here
-  };
 
+  };
 
   const handleRatingChange = (e, dataType, index) => {
     const newData = [...eval(dataType)];
     newData[index].rating = e.target.value;
     eval('set' + dataType.charAt(0).toUpperCase() + dataType.slice(1))(newData);
+
+    setXAxis(calculateXAxis(ipData, cpData));
+    setYAxis(calculateYAxis(fpData, spData));
   };
 
+  const conservativeThreshold = 2.5;
+  const defensiveThreshold = 4;
+  const aggressiveThreshold = 6;
+
+  const determineCategory = (x, y) => {
+    if (x <= conservativeThreshold && y <= conservativeThreshold) {
+      return 'Conservative';
+    } else if (x <= defensiveThreshold && y > conservativeThreshold) {
+      return 'Defensive';
+    } else if (x > defensiveThreshold && y <= defensiveThreshold) {
+      return 'Aggressive';
+    } else {
+      return 'Competitive';
+    }
+  };
+
+  const category = determineCategory(xAxis, yAxis);
 
   return (
     <div className="bg-slate-700">
@@ -68,14 +104,17 @@ const Space = () => {
               {fpData.map((item, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <label htmlFor={`fpFactor-${index}`} className="w-1/2">{item.factor}</label>
-                  <input
-                    type="number"
+                  <select
                     id={`fpFactor-${index}`}
                     value={item.rating}
                     onChange={(e) => handleRatingChange(e, 'fpData', index)}
-                    placeholder="Rating"
                     className="w-1/2 px-4 py-2 border border-gray-300 rounded-md"
-                  />
+                  >
+                    <option value="">Select rating</option>
+                    {[1, 2, 3, 4, 5, 6, 7].map((value) => (
+                      <option key={value} value={value}>{value}</option>
+                    ))}
+                  </select>
                 </div>
               ))}
             </div>
@@ -85,14 +124,17 @@ const Space = () => {
               {ipData.map((item, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <label htmlFor={`ipFactor-${index}`} className="w-1/2">{item.factor}</label>
-                  <input
-                    type="number"
+                  <select
                     id={`ipFactor-${index}`}
                     value={item.rating}
                     onChange={(e) => handleRatingChange(e, 'ipData', index)}
-                    placeholder="Rating"
                     className="w-1/2 px-4 py-2 border border-gray-300 rounded-md"
-                  />
+                  >
+                    <option value="">Select rating</option>
+                    {[1, 2, 3, 4, 5, 6, 7].map((value) => (
+                      <option key={value} value={value}>{value}</option>
+                    ))}
+                  </select>
                 </div>
               ))}
             </div>
@@ -102,14 +144,17 @@ const Space = () => {
               {cpData.map((item, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <label htmlFor={`cpFactor-${index}`} className="w-1/2">{item.factor}</label>
-                  <input
-                    type="number"
+                  <select
                     id={`cpFactor-${index}`}
                     value={item.rating}
                     onChange={(e) => handleRatingChange(e, 'cpData', index)}
-                    placeholder="Rating"
                     className="w-1/2 px-4 py-2 border border-gray-300 rounded-md"
-                  />
+                  >
+                    <option value="">Select rating</option>
+                    {[-1, -2, -3, -4, -5, -6, -7].map((value) => (
+                      <option key={value} value={value}>{value}</option>
+                    ))}
+                  </select>
                 </div>
               ))}
             </div>
@@ -119,17 +164,40 @@ const Space = () => {
               {spData.map((item, index) => (
                 <div key={index} className="flex items-center mb-2">
                   <label htmlFor={`spFactor-${index}`} className="w-1/2">{item.factor}</label>
-                  <input
-                    type="number"
+                  <select
                     id={`spFactor-${index}`}
                     value={item.rating}
                     onChange={(e) => handleRatingChange(e, 'spData', index)}
-                    placeholder="Rating"
                     className="w-1/2 px-4 py-2 border border-gray-300 rounded-md"
-                  />
+                  >
+                    <option value="">Select rating</option>
+                    {[-1, -2, -3, -4, -5, -6, -7].map((value) => (
+                      <option key={value} value={value}>{value}</option>
+                    ))}
+                  </select>
                 </div>
               ))}
             </div>
+            <div className="mb-6">
+              <p>X-axis: </p>
+              <p>Y-axis: </p>
+            </div>
+
+            <div className="flex justify-between w-full px-8 mt-8">
+              <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">X-Axis</h2>
+                <p className="text-2xl font-semibold text-green-500">{xAxis}</p>
+              </div>
+              <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Y-Axis</h2>
+                <p className="text-2xl font-semibold text-green-500">{yAxis}</p>
+              </div>
+              <div className="total-score-card bg-white rounded-lg p-4 shadow-md">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Category</h2>
+                <p className="text-2xl font-semibold text-green-500">{category}</p>
+              </div>
+            </div>
+            
             <button
               type="submit"
               className="w-full mt-8 px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"

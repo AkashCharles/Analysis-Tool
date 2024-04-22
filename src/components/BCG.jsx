@@ -174,7 +174,6 @@ const BCG = () => {
           {dbError && <p className="text-red-500 mt-4">{dbError}</p>}
         </form>
         
-        {/* Table display code */}
       </div>
     </div>
   );
