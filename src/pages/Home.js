@@ -7,7 +7,9 @@ function Home() {
   return (
     <div className="image">
       <div className='image'></div> 
-      <Navbar />
+      <div className='py-4'>
+        <Navbar />
+      </div>
       <Hero />
     </div>
   );
