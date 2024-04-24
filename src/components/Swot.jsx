@@ -159,13 +159,15 @@ const Swot = () => {
                     placeholder={`Weight ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
-                  <input
-                    type="number"
+                  <select
                     value={strength.rating}
                     onChange={(e) => handleChange(index, 'rating', e.target.value, 'strengths')}
-                    placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
+                  >
+                    <option value="">Select Rating</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
                  
                   <button
                     type="button"
@@ -206,13 +208,18 @@ const Swot = () => {
                     placeholder={`Weight ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
                   />
-                  <input
-                    type="number"
+                 
+                  <select
                     value={weakness.rating}
                     onChange={(e) => handleChange(index, 'rating', e.target.value, 'weaknesses')}
-                    placeholder={`Rating ${index + 1}`}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
+                  >
+                    <option value="">Select Rating</option>
+                    <option value="3">1</option>
+                    <option value="4">2</option>
+                  </select>
+
+
                   <button
                     type="button"
                     onClick={() => handleAddField('weaknesses')}
@@ -235,95 +242,102 @@ const Swot = () => {
 
 
             <div>
-              <h2 className="text-xl font-bold mb-4">Opportunities</h2>
-              {opportunitiesData.map((opportunity, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="text"
-                    value={opportunity.opportunity}
-                    onChange={(e) => handleChange(index, 'opportunity', e.target.value, 'opportunities')}
-                    placeholder={`Enter opportunity ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                  <input
-                    type="number"
-                    value={opportunity.weight}
-                    onChange={(e) => handleChange(index, 'weight', e.target.value, 'opportunities')}
-                    placeholder={`Weight ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                  <input
-                    type="number"
-                    value={opportunity.rating}
-                    onChange={(e) => handleChange(index, 'rating', e.target.value, 'opportunities')}
-                    placeholder={`Rating ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                 <button
-                    type="button"
-                    onClick={() => handleAddField('opportunities')}
-                    className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-                  >
-                    +
-                  </button>
-                  {opportunitiesData.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveField(index, 'opportunities')}
-                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                    >
-                      -
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
+        <h2 className="text-xl font-bold mb-4">Opportunities</h2>
+        {opportunitiesData.map((opportunity, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <input
+              type="text"
+              value={opportunity.opportunity}
+              onChange={(e) => handleChange(index, 'opportunity', e.target.value, 'opportunities')}
+              placeholder={`Enter opportunity ${index + 1}`}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            />
+            <input
+              type="number"
+              value={opportunity.weight}
+              onChange={(e) => handleChange(index, 'weight', e.target.value, 'opportunities')}
+              placeholder={`Weight ${index + 1}`}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            />
+            <select
+              value={opportunity.rating}
+              onChange={(e) => handleChange(index, 'rating', e.target.value, 'opportunities')}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            >
+              <option value="">Select Rating</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => handleAddField('opportunities')}
+              className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+            >
+              +
+            </button>
+            {opportunitiesData.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleRemoveField(index, 'opportunities')}
+                className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+              >
+                -
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
 
-
-            <div>
-              <h2 className="text-xl font-bold mb-4">Threats</h2>
-              {threatsData.map((threat, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="text"
-                    value={threat.threat}
-                    onChange={(e) => handleChange(index, 'threat', e.target.value, 'threats')}
-                    placeholder={`Enter threat ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                  <input
-                    type="number"
-                    value={threat.weight}
-                    onChange={(e) => handleChange(index, 'weight', e.target.value, 'threats')}
-                    placeholder={`Weight ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                  <input
-                    type="number"
-                    value={threat.rating}
-                    onChange={(e) => handleChange(index, 'rating', e.target.value, 'threats')}
-                    placeholder={`Rating ${index + 1}`}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleAddField('threats')}
-                    className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-                  >
-                    +
-                  </button>
-                  {threatsData.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveField(index, 'threats')}
-                      className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
-                    >
-                      -
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
+      <div>
+        <h2 className="text-xl font-bold mb-4">Threats</h2>
+        {threatsData.map((threat, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <input
+              type="text"
+              value={threat.threat}
+              onChange={(e) => handleChange(index, 'threat', e.target.value, 'threats')}
+              placeholder={`Enter threat ${index + 1}`}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            />
+            <input
+              type="number"
+              value={threat.weight}
+              onChange={(e) => handleChange(index, 'weight', e.target.value, 'threats')}
+              placeholder={`Weight ${index + 1}`}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            />
+            <select
+              value={threat.rating}
+              onChange={(e) => handleChange(index, 'rating', e.target.value, 'threats')}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mr-2"
+            >
+              <option value="">Select Rating</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => handleAddField('threats')}
+              className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+            >
+              +
+            </button>
+            {threatsData.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleRemoveField(index, 'threats')}
+                className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 ml-2"
+              >
+                -
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
           </div>
 
           <div className="flex justify-between w-full px-8 mt-8">
